@@ -25,9 +25,10 @@ public class MainActivity extends AppCompatActivity implements
                 return;
             }
 
-            Log.d("Swelang", "MainActivity::onCreate new ChooseLanguageFragment");
+            Log.d("Swelang", "MainActivity::onCreate new ShowResultFragment");
 
-            ChooseLanguageFragment firstFragment = new ChooseLanguageFragment();
+            //ChooseLanguageFragment firstFragment = new ChooseLanguageFragment();
+            ShowResultFragment firstFragment = new ShowResultFragment();
             Intent intent = getIntent();
             Bundle extras = null;
             if (intent != null) {

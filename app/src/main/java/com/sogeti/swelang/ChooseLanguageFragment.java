@@ -2,7 +2,6 @@ package com.sogeti.swelang;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
