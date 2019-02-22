@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Swelang</string>
+    <string name="choose_language">Välj språk</string>
+    <string name="from_language">Från</string>
+    <string name="to_language">Till</string>
+    <string-array name="fromlanguage_array">
+        <item>Svenska</item>
+        <item>Arabiska</item>
+        <item>Somaliska</item>
+    </string-array>
+    <string-array name="fromlanguage_val_array">
+        <item>sv</item>
+        <item>ar</item>
+        <item>som</item>
+    </string-array>
+    <string-array name="tolanguage_array">
+        <item>Somaliska</item>
+        <item>Arabiska</item>
+        <item>Svenska</item>
+    </string-array>
+    <string-array name="tolanguage_val_array">
+        <item>som</item>
+        <item>ar</item>
+        <item>sv</item>
+    </string-array>
 </resources>
