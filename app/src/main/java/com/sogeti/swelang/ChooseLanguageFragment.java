@@ -8,14 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
 
-public class ChooseLanguageFragment  extends Fragment implements AdapterView.OnItemSelectedListener {
+public class ChooseLanguageFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private App.OnAppEventListener mCallback;
 
     Spinner mFromLanguageSpinner;
     Spinner mToLanguageSpinner;
+    Button mLanguageOkButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,7 +30,22 @@ public class ChooseLanguageFragment  extends Fragment implements AdapterView.OnI
         mToLanguageSpinner = view.findViewById(R.id.tolanguage_spinner);
         mToLanguageSpinner.setOnItemSelectedListener(this);
 
+        mLanguageOkButton = view.findViewById(R.id.languageok_button);
+
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mLanguageOkButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d("GataGps", "ChooseLanguageFragment::onStart::setOnClickListener mLanguageOkButton clicked");
+
+                mCallback.onLanguageChoosen(getFromLanguage(), getToLanguage());
+            }
+        });
     }
 
     @Override
@@ -47,20 +64,21 @@ public class ChooseLanguageFragment  extends Fragment implements AdapterView.OnI
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("Swelang", "ChooseLanguageFragment::onItemSelected called, id: " + id + ", position: " + position);
-
-        int fromSelectedPos = mFromLanguageSpinner.getSelectedItemPosition();
-        String fromSelectedVal = getResources().getStringArray(R.array.fromlanguage_val_array)[mFromLanguageSpinner.getSelectedItemPosition()];
-        Log.d("Swelang", "ChooseLanguageFragment::onItemSelected fromlanguage fromSelectedVal: " + fromSelectedVal);
-
-        int toSelectedPos = mToLanguageSpinner.getSelectedItemPosition();
-        String toSelectedVal = getResources().getStringArray(R.array.tolanguage_val_array)[mToLanguageSpinner.getSelectedItemPosition()];
-        Log.d("Swelang", "ChooseLanguageFragment::onItemSelected tolanguage toSelectedVal: " + toSelectedVal);
+        Log.d("Swelang", "ChooseLanguageFragment::onItemSelected called");
+        Log.d("Swelang", "ChooseLanguageFragment::onItemSelected fromlanguage fromSelectedVal: " + getFromLanguage());
+        Log.d("Swelang", "ChooseLanguageFragment::onItemSelected tolanguage toSelectedVal: " + getToLanguage());
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         Log.d("Swelang", "ChooseLanguageFragment::onNothingSelected called");
+    }
 
+    private String getFromLanguage() {
+        return getResources().getStringArray(R.array.fromlanguage_val_array)[mFromLanguageSpinner.getSelectedItemPosition()];
+    }
+
+    private String getToLanguage() {
+        return getResources().getStringArray(R.array.tolanguage_val_array)[mToLanguageSpinner.getSelectedItemPosition()];
     }
 }

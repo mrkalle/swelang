@@ -9,4 +9,6 @@ public class App extends Application {
     }
 
     public static final int APP_VERSION = 1;
+    public static final String FROM_LANGUAGE = "fromLanguage";
+    public static final String TO_LANGUAGE = "toLanguage";
 }

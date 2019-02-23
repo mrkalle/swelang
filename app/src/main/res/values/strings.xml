@@ -11,7 +11,7 @@
     <string-array name="fromlanguage_val_array">
         <item>sv</item>
         <item>ar</item>
-        <item>som</item>
+        <item>so</item>
     </string-array>
     <string-array name="tolanguage_array">
         <item>Somaliska</item>
@@ -19,7 +19,7 @@
         <item>Svenska</item>
     </string-array>
     <string-array name="tolanguage_val_array">
-        <item>som</item>
+        <item>so</item>
         <item>ar</item>
         <item>sv</item>
     </string-array>

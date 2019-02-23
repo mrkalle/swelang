@@ -48,4 +48,15 @@
         android:entries="@array/tolanguage_array"
         android:spinnerMode="dropdown" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <Button
+        android:id="@+id/languageok_button"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="OK"/>
+
 </LinearLayout>
