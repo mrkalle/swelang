@@ -18,45 +18,50 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="15dp" />
+        android:layout_height="25dp" />
 
     <TextView
         android:id="@+id/lang_from_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/from_language"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textSize="25sp"/>
 
     <Spinner
         android:id="@+id/fromlanguage_spinner"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:entries="@array/fromlanguage_array"
-        android:spinnerMode="dropdown" />
+        android:spinnerMode="dropdown"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/lang_to_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/to_language"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="25sp" />
 
     <Spinner
         android:id="@+id/tolanguage_spinner"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:entries="@array/tolanguage_array"
-        android:spinnerMode="dropdown" />
+        android:spinnerMode="dropdown"
+        android:textSize="40sp"/>
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="30dp" />
 
     <Button
         android:id="@+id/languageok_button"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:text="OK"/>
+        android:text="OK"
+        android:textSize="30sp"/>
 
 </LinearLayout>

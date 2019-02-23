@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -24,6 +26,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,9 +40,11 @@ public class ShowResultFragment extends Fragment{
 
     private App.OnAppEventListener mCallback;
 
-    private TextView mShowResultTextView;
+    //private TextView mShowResultTextView;
     private TextView mFromShowResultTextView;
     private TextView mToShowResultTextView;
+    private ImageView mImageView;
+    private ProgressBar mProgressbar;
 
     private String mFromLanguage;
     private String mToLanguage;
@@ -58,9 +63,13 @@ public class ShowResultFragment extends Fragment{
             mToLanguage = args.getString(App.TO_LANGUAGE);
         }
 
-        mShowResultTextView = view.findViewById(R.id.showresult_textview);
+        String a = "===";
+
+        //mShowResultTextView = view.findViewById(R.id.showresult_textview);
         mFromShowResultTextView = view.findViewById(R.id.fromshowresult_textview);
         mToShowResultTextView = view.findViewById(R.id.toshowresult_textview);
+        mImageView = view.findViewById(R.id.imageView);
+        mProgressbar = view.findViewById(R.id.progressbar);
 
         return view;
     }
@@ -77,16 +86,17 @@ public class ShowResultFragment extends Fragment{
             mToLanguage = args.getString(App.TO_LANGUAGE);
         }
 
+        //mShowResultTextView.setVisibility(View.GONE);
+        Picasso.get().load(App.IMAGE_URL).into(mImageView);
+
         JsonObjectRequest jsonObjectRequest = createAzureRequest();
         VolleySingleton.getInstance(getContext()).addToRequestQueue(jsonObjectRequest);
-        //handleCognitiveResult("apa");
 
         Log.d("Swelang", "ShowResultFragment::onStart addToRequestQueue executed");
     }
 
     private void handleCognitiveResult(final boolean isFromCurrent, String objectname) {
-        String targetLanguage = "";
-
+        String targetLanguage;
         if (isFromCurrent)
             targetLanguage = mFromLanguage;
         else
@@ -117,10 +127,15 @@ public class ShowResultFragment extends Fragment{
                             e.printStackTrace();
                         }
 
-                        if (isFromCurrent)
+                        if (isFromCurrent) {
                             mFromShowResultTextView.setText(text);
-                        else
+                            mFromShowResultTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_sweden, 0, 0, 0);
+                        }
+                        else {
                             mToShowResultTextView.setText(text);
+                            mToShowResultTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_syria, 0, 0, 0);
+                            mProgressbar.setVisibility(View.INVISIBLE);
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -167,7 +182,7 @@ public class ShowResultFragment extends Fragment{
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("url", "https://www.cykloteket.se/_files/ProductMedia/29950_13083.jpg");
+            jsonObject.put("url", App.IMAGE_URL);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -184,7 +199,7 @@ public class ShowResultFragment extends Fragment{
                                 JSONArray objects = response.getJSONArray("objects");
                                 JSONObject objects2 = objects.getJSONObject(0);
                                 String result = (String)objects2.get("object");
-                                mShowResultTextView.setText(result);
+                                //mShowResultTextView.setText(result);
                                 handleCognitiveResult(true, result);
                                 handleCognitiveResult(false, result);
                             } catch (JSONException e) {
@@ -237,64 +252,4 @@ public class ShowResultFragment extends Fragment{
             }
         };
     }
-
-/*
-    private StringRequest createGoogleTranslateRequest(String objectname) {
-        String url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=sports ball";
-        Log.d("Swelang", "ShowResultFragment::createGoogleTranslateRequest called, url: " + url);
-
-        return new StringRequest(Request.Method.GET, url, null,
-                new Response.Listener<String> () {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Swelang", "ShowResultFragment::createGoogleTranslateRequest::onResponse, Response : " + response);
-                        Log.d("Swelang", "ShowResultFragment::createGoogleTranslateRequest::onResponse, length: " + response.length());
-
-                        mFromShowResultTextView.setText(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("Swelang", "ShowResultFragment::createGoogleTranslateRequest::onErrorResponse Error getting response");
-                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                            Log.d("Swelang", "ShowResultFragment::createGoogleTranslateRequest::onErrorResponse Error getting response TimeoutError NoConnectionError");
-                        } else if (error instanceof AuthFailureError) {
-                            Log.d("Swelang", "ShowResultFragment::createGoogleTranslateRequest::onErrorResponse Error getting response AuthFailureError ");
-                        } else if (error instanceof ServerError) {
-                            Log.d("Swelang", "ShowResultFragment::createGoogleTranslateRequest::onErrorResponse Error getting response ServerError ");
-                        } else if (error instanceof NetworkError) {
-                            Log.d("Swelang", "ShowResultFragment::createGoogleTranslateRequest::onErrorResponse Error getting response NetworkError ");
-                        } else if (error instanceof ParseError) {
-                            Log.d("Swelang", "ShowResultFragment::createGoogleTranslateRequest::onErrorResponse Error getting response ParseError: ");
-                        }
-
-                        error.printStackTrace();
-                    }
-                }
-        ) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
-
-                return params;
-            }
-
-            @Override
-            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                try {
-                    if (response.data.length == 0) {
-                        byte[] responseData = "{}".getBytes("UTF8");
-                        response = new NetworkResponse(response.statusCode, responseData, response.headers, response.notModified);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                return super.parseNetworkResponse(response);
-            }
-        };
-    }
-    */
 }

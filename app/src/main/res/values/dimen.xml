@@ -2,6 +2,6 @@
 <resources>
     <dimen name="button_margin">5dp</dimen>
     <dimen name="button_width">250dp</dimen>
-    <dimen name="text_size">34sp</dimen>
+    <dimen name="text_size">50sp</dimen>
     <dimen name="layout_padding">16dp</dimen>
 </resources>
