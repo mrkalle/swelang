@@ -14,13 +14,13 @@
         <item>so</item>
     </string-array>
     <string-array name="tolanguage_array">
-        <item>Somaliska</item>
         <item>Arabiska</item>
+        <item>Somaliska</item>
         <item>Svenska</item>
     </string-array>
     <string-array name="tolanguage_val_array">
-        <item>so</item>
         <item>ar</item>
+        <item>so</item>
         <item>sv</item>
     </string-array>
 </resources>

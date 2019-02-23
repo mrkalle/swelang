@@ -12,7 +12,7 @@
         android:id="@+id/showresult_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Trix"
+        android:text="Laddar..."
         android:textAlignment="center"
         android:textSize="@dimen/text_size" />
 
@@ -20,7 +20,15 @@
         android:id="@+id/fromshowresult_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Trixxy"
+        android:text=".."
+        android:textAlignment="center"
+        android:textSize="@dimen/text_size" />
+
+    <TextView
+        android:id="@+id/toshowresult_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="."
         android:textAlignment="center"
         android:textSize="@dimen/text_size" />
 

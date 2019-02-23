@@ -15,11 +15,15 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +39,7 @@ public class ShowResultFragment extends Fragment{
 
     private TextView mShowResultTextView;
     private TextView mFromShowResultTextView;
+    private TextView mToShowResultTextView;
 
     private String mFromLanguage;
     private String mToLanguage;
@@ -55,83 +60,91 @@ public class ShowResultFragment extends Fragment{
 
         mShowResultTextView = view.findViewById(R.id.showresult_textview);
         mFromShowResultTextView = view.findViewById(R.id.fromshowresult_textview);
+        mToShowResultTextView = view.findViewById(R.id.toshowresult_textview);
 
         return view;
     }
 
     @Override
-    public void onStart () {
+    public void onStart() {
         super.onStart();
 
         Log.d("Swelang", "ShowResultFragment::onStart called");
 
+        Bundle args = getArguments();
+        if (args != null) {
+            mFromLanguage = args.getString(App.FROM_LANGUAGE);
+            mToLanguage = args.getString(App.TO_LANGUAGE);
+        }
+
         JsonObjectRequest jsonObjectRequest = createAzureRequest();
         VolleySingleton.getInstance(getContext()).addToRequestQueue(jsonObjectRequest);
+        //handleCognitiveResult("apa");
 
         Log.d("Swelang", "ShowResultFragment::onStart addToRequestQueue executed");
     }
 
-    private void handleCognitiveResult(String objectname) {
-        return;
-        //StringRequest stringRequest = createGoogleTranslateRequest(objectname);
+    private void handleCognitiveResult(final boolean isFromCurrent, String objectname) {
+        String targetLanguage = "";
 
-        /*
+        if (isFromCurrent)
+            targetLanguage = mFromLanguage;
+        else
+            targetLanguage = mToLanguage;
 
-        String url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=sv&dt=t&q=ball";
+        String url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=" + targetLanguage;
+        JSONObject translationObject = new JSONObject();
+        JSONArray translationObjects = new JSONArray();
+        try {
+            translationObject.put("Text", objectname);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        translationObjects.put(translationObject);
 
+        JsonArrayRequest stringRequest = new JsonArrayRequest(Request.Method.POST, url, translationObjects,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("Swelang", "ShowResultFragment::onResponse called");
-                        mFromShowResultTextView.setText("boll");
+                    public void onResponse(JSONArray response) {
+                        String text = "";
+                        try {
+                            JSONObject object = response.getJSONObject(0);
+                            JSONArray translations = object.getJSONArray("translations");
+                            JSONObject translation = (JSONObject)translations.get(0);
+                            text = (String)translation.get("text");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (isFromCurrent)
+                            mFromShowResultTextView.setText(text);
+                        else
+                            mToShowResultTextView.setText(text);
                     }
                 }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-                        Log.d("Swelang", "ShowResultFragment::onErrorResponse called");
-                        String apa = "katt";
-                    }
-                })
-        {
-
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (isFromCurrent)
+                    mFromShowResultTextView.setText("That didn't work!");
+                else
+                    mToShowResultTextView.setText("That didn't work!");
+            }
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
+                params.put("Ocp-Apim-Subscription-Key", "0287aea5d7c94bdab92078e98c34f7b0");
                 params.put("Content-Type", "application/json");
 
                 return params;
             }
         };
 
-        VolleySingleton.getInstance(getContext()).addToRequestQueue(jsonObjectRequest);
-*/
-/*
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //textView.setText("Response is: "+ response.substring(0,500));
-                        String apa = "test";
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //textView.setText("That didn't work!");
-                String katt = "testar";
-            }
-        });
-
+        Log.d("Swelang", "ShowResultFragment::onStart xxxxxxxxx");
         RequestQueue queue = Volley.newRequestQueue(getContext());
         queue.add(stringRequest);
-
-        */
-
-        //VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
+        Log.d("Swelang", "ShowResultFragment::onStart yyyyyyyyy");
     }
 
     @Override
@@ -172,7 +185,8 @@ public class ShowResultFragment extends Fragment{
                                 JSONObject objects2 = objects.getJSONObject(0);
                                 String result = (String)objects2.get("object");
                                 mShowResultTextView.setText(result);
-                                handleCognitiveResult(result);
+                                handleCognitiveResult(true, result);
+                                handleCognitiveResult(false, result);
                             } catch (JSONException e) {
                                 //e.printStackTrace();
                             }
